@@ -1,19 +1,19 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
+  "version": 3,
+  "builds": [{
+    "src": "index.html",
+    "use": "@vercel/static",
+    "config": { 
+      "maxLambdaSize": "15mb",
+      "includeFiles": "index.html|assets/**"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html",
-      "headers": {
-        "Cache-Control": "no-store"
-      }
+  }],
+  "routes": [{
+    "src": "/(.*)",
+    "dest": "/index.html",
+    "headers": {
+      "X-Frame-Options": "DENY",
+      "Content-Security-Policy": "frame-ancestors 'none'"
     }
-  ],
-  "cleanUrls": true
+  }]
 }
