@@ -1,5 +1,5 @@
 {
-    "Admin": { "password": "password123", "role": "admin" },
-    "Moderator": { "password": "qwerty", "role": "moderator" },
+    "Ivan": { "password": "password123", "role": "admin" },
+    "IvanB": { "password": "qwerty", "role": "moderator" },
     "Maxim": { "password": "bigchlen", "role": "user" }
 }
