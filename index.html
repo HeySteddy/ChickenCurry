@@ -137,13 +137,16 @@
         }
         
         document.getElementById('support-btn').addEventListener('click', function() {
+    // Проверка на существование initDataUnsafe и корректная обработка ссылки
             if (Telegram.WebApp.initDataUnsafe) {
-                Telegram.WebApp.openTelegramLink('https://t.me/chickencurryonlinesupp');
+            Telegram.WebApp.close();  // Закрываем WebApp, если это необходимо
+            window.open('https://t.me/chickencurryonlinesupp', '_blank');  // Открываем ссылку в новой вкладке
             } else {
-                window.open('https://t.me/chickencurryonlinesupp', '_blank');
+            // Если WebApp не инициализирован, просто открываем ссылку
+            window.open('https://t.me/chickencurryonlinesupp', '_blank');
             }
-            Telegram.WebApp.close();
         });
+
     </script>
 </body>
 </html>
