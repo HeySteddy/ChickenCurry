@@ -60,6 +60,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             transition: transform 0.2s, box-shadow 0.2s;
             border: 1px solid #eee;
+            cursor: pointer;
         }
         
         .menu-item:hover {
@@ -81,25 +82,9 @@
             font-size: 16px;
             flex-grow: 1;
         }
-        
-        /* Protection against duplicate rendering */
-        body::after {
-            content: "";
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: white;
-            z-index: 9999;
-            opacity: 0;
-            pointer-events: none;
-        }
     </style>
 </head>
 <body>
-    <!-- Single root container -->
     <div class="app-container" id="app-root">
         <header class="app-header">
             <h1 class="app-title">ChickenCurryOnline</h1>
@@ -121,7 +106,7 @@
                 <div class="menu-text">Администрация</div>
             </a>
             
-            <a href="#" class="menu-item" onclick="navigate('support')">
+            <a href="#" class="menu-item" id="support-btn">
                 <div class="menu-icon"><i class="fas fa-headset"></i></div>
                 <div class="menu-text">Написать в поддержку</div>
             </a>
@@ -134,36 +119,28 @@
     </div>
 
     <script>
-        // Single initialization protection
         if (!window.appInitialized) {
-            // Initialize Telegram WebApp
             Telegram.WebApp.ready();
             Telegram.WebApp.expand();
             
-            // Navigation function
             window.navigate = function(page) {
                 Telegram.WebApp.showAlert(`Переход на: ${page}`);
-                // Здесь будет логика перехода на другие страницы
-                // window.location.href = `${page}.html`;
             };
             
-            // Mark as initialized
             window.appInitialized = true;
-            
-            // Debug info
             console.log('App initialized successfully');
         } else {
             console.warn('App already initialized!');
         }
         
-        // Protection against duplicate containers
-        if (document.querySelectorAll('#app-root').length > 1) {
-            const roots = document.querySelectorAll('#app-root');
-            for (let i = 1; i < roots.length; i++) {
-                roots[i].remove();
+        document.getElementById('support-btn').addEventListener('click', function() {
+            if (Telegram.WebApp.initDataUnsafe) {
+                Telegram.WebApp.openTelegramLink('https://t.me/chickencurryonlinesupp');
+            } else {
+                window.open('https://t.me/chickencurryonlinesupp', '_blank');
             }
-            console.warn('Removed duplicate app roots');
-        }
+            Telegram.WebApp.close();
+        });
     </script>
 </body>
 </html>
