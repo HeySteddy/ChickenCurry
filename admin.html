@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администрация</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 320px;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .input-group i {
+            margin-right: 10px;
+            color: white;
+        }
+        .input-group input {
+            background: none;
+            border: none;
+            outline: none;
+            color: white;
+            flex-grow: 1;
+            font-size: 16px;
+        }
+        .login-button {
+            background: white;
+            color: black;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .login-button:hover {
+            background: #ccc;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2 style="color: white; margin-bottom: 20px;">Вход в админ-панель</h2>
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="login" placeholder="Login">
+        </div>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="Password">
+        </div>
+        <button class="login-button" onclick="authenticate()">Авторизоваться</button>
+        <p class="error-message" id="error-message">Неверный логин или пароль</p>
+    </div>
+    
+    <script>
+        function authenticate() {
+            var login = document.getElementById("login").value;
+            var password = document.getElementById("password").value;
+            var errorMessage = document.getElementById("error-message");
+            
+            if (login === "admin" && password === "1234") {
+                window.location.href = "dashboard.html"; // Перенаправление после успешного входа
+            } else {
+                errorMessage.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
