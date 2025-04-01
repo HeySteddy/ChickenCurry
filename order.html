@@ -268,15 +268,18 @@ function renderCalendar() {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const firstDayOfMonth = new Date(year, month, 1).getDay();
     
-    // Очищаем старые дни
-    calendarDays.innerHTML = '';
+    calendarDays.innerHTML = ''; // Очищаем старые дни
     
-    // Название месяца
     monthTitle.textContent = `${currentDate.toLocaleString('ru-RU', { month: 'long' })} ${year}`;
     
-    // Печатаем дни месяца
-    for (let i = 0; i < firstDayOfMonth; i++) {
-        calendarDays.innerHTML += `<button class="disabled"></button>`;
+    // Смещение дней недели (чтобы понедельник был первым)
+    const offset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; 
+    
+    for (let i = 0; i < offset; i++) {
+        const emptyCell = document.createElement('button');
+        emptyCell.classList.add('disabled');
+        emptyCell.disabled = true;
+        calendarDays.appendChild(emptyCell);
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
