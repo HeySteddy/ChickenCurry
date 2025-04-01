@@ -1,2 +1,0 @@
-# Telegram Mini App
-Статический HTML-проект для Telegram бота
