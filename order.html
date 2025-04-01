@@ -1,9 +1,151 @@
 ﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- ... предыдущие стили и метатеги ... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Записаться на игру</title>
+    <script src="https://telegram.org/js/web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Добавляем стили для сюжетов */
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: black;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/assets/image_2025-04-01_17-29-06.png') no-repeat center center/cover;
+            filter: blur(10px);
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Стили календаря */
+        .calendar-container {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 5px 15px;
+        }
+
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .calendar-table th,
+        .calendar-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .calendar-table th {
+            background: rgba(255, 255, 255, 0.15);
+            font-weight: normal;
+        }
+
+        .calendar-day {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .calendar-day:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .other-month {
+            color: #666;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .disabled {
+            background: rgba(255, 0, 0, 0.3);
+            cursor: not-allowed;
+            color: #888;
+        }
+
+        /* Стили выбора времени */
+        .time-container {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .time-container.active {
+            display: block;
+        }
+
+        .time-container button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .time-container button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Стили выбора сюжета */
+        .plot-container {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .plot-container.active {
+            display: block;
+        }
+
         .plot-button {
             width: 100%;
             padding: 15px;
@@ -37,11 +179,49 @@
             border-radius: 8px;
             margin: 15px 0;
         }
+
+        .back-button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: rgba(255, 69, 0, 0.3);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- ... календарь и выбор времени ... -->
+        <!-- Календарь -->
+        <div class="calendar-container active">
+            <div class="calendar-header">
+                <button id="prevMonth">&lt;</button>
+                <span id="monthTitle"></span>
+                <button id="nextMonth">&gt;</button>
+            </div>
+            <table class="calendar-table">
+                <thead>
+                    <tr>
+                        <th>Пн</th>
+                        <th>Вт</th>
+                        <th>Ср</th>
+                        <th>Чт</th>
+                        <th>Пт</th>
+                        <th>Сб</th>
+                        <th>Вс</th>
+                    </tr>
+                </thead>
+                <tbody id="calendarBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Выбор времени -->
+        <div class="time-container">
+            <h2>Выберите время:</h2>
+            <button id="time12">12:00 по МСК</button>
+            <button id="time16">16:00 по МСК</button>
+        </div>
 
         <!-- Выбор сюжета -->
         <div class="plot-container">
@@ -60,22 +240,102 @@
     </div>
 
     <script>
-        // Глобальные переменные
+        let currentDate = new Date();
         let selectedDate = null;
         let selectedScenario = null;
+
+        // Рендер календаря
+        function renderCalendar() {
+            const calendarBody = document.getElementById('calendarBody');
+            const monthTitle = document.getElementById('monthTitle');
+            
+            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+            const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+            firstDay.setDate(firstDay.getDate() - startDay);
+
+            calendarBody.innerHTML = '';
+            monthTitle.textContent = currentDate.toLocaleString('ru-RU', { 
+                month: 'long', 
+                year: 'numeric' 
+            }).replace(' г.', '');
+
+            let date = new Date(firstDay);
+            
+            for(let week = 0; week < 6; week++) {
+                const row = document.createElement('tr');
+                
+                for(let day = 0; day < 7; day++) {
+                    const cell = document.createElement('td');
+                    cell.className = 'calendar-day';
+                    
+                    const isCurrentMonth = date.getMonth() === currentDate.getMonth();
+                    const isPastDate = date < new Date() && isCurrentMonth;
+
+                    cell.textContent = date.getDate();
+                    cell.classList.toggle('other-month', !isCurrentMonth);
+                    
+                    if(isPastDate || !isCurrentMonth) {
+                        cell.classList.add('disabled');
+                    } else {
+                        cell.addEventListener('click', () => {
+                            selectedDate = new Date(date);
+                            showTimeSelection();
+                        });
+                    }
+                    
+                    row.appendChild(cell);
+                    date.setDate(date.getDate() + 1);
+                }
+                
+                calendarBody.appendChild(row);
+                if(date > lastDay) break;
+            }
+        }
+
+        // Навигация по месяцам
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        // Показать выбор времени
+        function showTimeSelection() {
+            document.querySelector('.time-container').classList.add('active');
+            document.querySelector('.calendar-container').classList.remove('active');
+        }
+
+        // Обработчики времени
+        document.getElementById('time12').addEventListener('click', () => {
+            selectedDate.setHours(12, 0, 0, 0);
+            showPlotSelection();
+        });
+
+        document.getElementById('time16').addEventListener('click', () => {
+            selectedDate.setHours(16, 0, 0, 0);
+            showPlotSelection();
+        });
+
+        // Показать выбор сюжета
+        function showPlotSelection() {
+            document.querySelector('.plot-container').classList.add('active');
+            document.querySelector('.time-container').classList.remove('active');
+        }
 
         // Загрузка сценариев
         function loadScenarios() {
             fetch('./scenario.json')
-                .then(response => {
-                    if (!response.ok) throw new Error('Ошибка загрузки');
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     initScenarioButtons(data.scenarios);
                 })
                 .catch(error => {
-                    console.error('Ошибка:', error);
+                    console.error('Ошибка загрузки сценариев:', error);
                     Telegram.WebApp.showAlert('Не удалось загрузить сценарии');
                 });
         }
@@ -83,6 +343,7 @@
         // Инициализация кнопок сюжетов
         function initScenarioButtons(scenarios) {
             const container = document.getElementById('plotButtons');
+            container.innerHTML = '';
             
             scenarios.forEach(scenario => {
                 const button = document.createElement('button');
@@ -105,7 +366,7 @@
             document.querySelector('.plot-details').classList.add('active');
         }
 
-        // Подтверждение выбора
+        // Подтверждение бронирования
         document.getElementById('confirmPlot').addEventListener('click', () => {
             if (!selectedDate || !selectedScenario) return;
 
@@ -125,11 +386,11 @@
             document.querySelector('.plot-container').classList.add('active');
         });
 
-        // Инициализация при загрузке
+        // Инициализация
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
         renderCalendar();
-        loadScenarios(); // Добавляем загрузку сценариев
+        loadScenarios();
     </script>
 </body>
 </html>
