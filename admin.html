@@ -100,19 +100,24 @@
         const password = document.getElementById('password').value.trim();
         const errorMessage = document.getElementById('error-message');
 
-        // Загружаем users.json
         try {
-            const response = await fetch('users.json');
+            const response = await fetch('/users.json');
+
+            if (!response.ok) {
+                throw new Error('Ошибка загрузки users.json');
+            }
+
             const users = await response.json();
 
             if (users[login] && users[login] === password) {
                 alert("Успешный вход!");
-                window.location.href = "dashboard.html"; // Переход на страницу админки
+                window.location.href = "/dashboard.html"; // Переход на страницу админки
             } else {
                 errorMessage.textContent = "Неверный логин или пароль!";
             }
         } catch (error) {
             errorMessage.textContent = "Ошибка загрузки базы данных!";
+            console.error("Ошибка загрузки users.json:", error);
         }
     }
 </script>
