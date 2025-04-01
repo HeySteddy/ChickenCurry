@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Записаться на игру</title>
+    <script src="https://telegram.org/js/web-app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: black;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/assets/image_2025-04-01_17-29-06.png') no-repeat center center/cover;
+            filter: blur(10px);
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .calendar-container, .time-container, .plot-container {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 20px;
+        }
+
+        .calendar-container.active, .time-container.active, .plot-container.active {
+            display: block;
+        }
+
+        .calendar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .calendar-header button {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            font-size: 14px;
+        }
+
+        .calendar-days button {
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .calendar-days button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .calendar-days button.disabled {
+            background-color: rgba(255, 0, 0, 0.5);
+            cursor: not-allowed;
+        }
+
+        .time-container, .plot-container {
+            text-align: center;
+        }
+
+        .time-container button, .plot-container button {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 10px 0;
+        }
+
+        .time-container button:hover, .plot-container button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .plot-details {
+            display: none;
+            text-align: center;
+        }
+
+        .plot-details.active {
+            display: block;
+        }
+
+        .plot-description {
+            margin-top: 10px;
+        }
+
+        .back-button {
+            margin-top: 10px;
+            cursor: pointer;
+            color: #ff4500;
+            font-size: 16px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Календарь -->
+    <div class="calendar-container active">
+        <div class="calendar-header">
+            <button id="prevMonth">&lt;</button>
+            <span id="monthTitle"></span>
+            <button id="nextMonth">&gt;</button>
+        </div>
+        <div class="calendar-days" id="calendarDays"></div>
+    </div>
+
+    <!-- Выбор времени -->
+    <div class="time-container">
+        <h3>Выберите время:</h3>
+        <button id="time12">12:00 по МСК</button>
+        <button id="time16">16:00 по МСК</button>
+    </div>
+
+    <!-- Выбор сюжета -->
+    <div class="plot-container">
+        <h3>Выберите сюжет:</h3>
+        <div id="plotButtons"></div> <!-- Здесь будут кнопки для выбора сюжета -->
+    </div>
+
+    <!-- Подробности сюжета -->
+    <div class="plot-details" id="plotDetails">
+        <h4 id="plotTitle"></h4>
+        <img id="plotImage" src="" alt="Сюжет" width="200">
+        <p class="plot-description" id="plotDescription"></p>
+        <button class="back-button" id="backToPlots">Назад</button>
+        <button id="choosePlot">Выбрать</button>
+    </div>
+
+</div>
+
+<script>
+// Получаем данные пользователя из Telegram
+const userTag = Telegram.WebApp.initDataUnsafe ? Telegram.WebApp.initDataUnsafe.user.username : "Неизвестно";
+
+// Загружаем сценарии из JSON
+fetch('/path/to/scenario.json')
+    .then(response => response.json())
+    .then(data => {
+        const plotButtonsContainer = document.getElementById('plotButtons');
+
+        data.scenarios.forEach(scenario => {
+            const button = document.createElement('button');
+            button.textContent = scenario.name;
+            button.addEventListener('click', () => {
+                showPlotDetails(scenario);
+            });
+            plotButtonsContainer.appendChild(button);
+        });
+    })
+    .catch(error => {
+        console.error('Ошибка при загрузке сценариев:', error);
+    });
+
+// Функция для отображения подробностей о выбранном сюжете
+function showPlotDetails(scenario) {
+    document.querySelector('.plot-container').classList.remove('active');
+    document.querySelector('.plot-details').classList.add('active');
+
+    document.getElementById('plotTitle').textContent = scenario.name;
+    document.getElementById('plotImage').src = `/assets/${scenario.name.toLowerCase().replace(' ', '_')}.jpg`; // Пример пути к картинке
+    document.getElementById('plotDescription').textContent = scenario.description;
+    document.getElementById('choosePlot').onclick = () => {
+        choosePlot(scenario);
+    };
+}
+
+// Функция для выбора сюжета и записи
+function choosePlot(scenario) {
+    const selectedDate = currentDate.getDate();
+    const selectedTime = document.querySelector('.time-container').getAttribute('data-date');
+    const selectedPlot = scenario.name;
+
+    const userTag = Telegram.WebApp.initDataUnsafe ? Telegram.WebApp.initDataUnsafe.user.username : "Неизвестно";
+
+    // Отправка данных на сервер
+    fetch('/save_booking', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            date: selectedDate,
+            time: selectedTime,
+            plot: selectedPlot,
+            userTag: userTag,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Данные успешно сохранены:', data);
+    })
+    .catch(error => {
+        console.error('Ошибка при отправке данных:', error);
+    });
+}
+
+document.getElementById('backToPlots').addEventListener('click', () => {
+    document.querySelector('.plot-details').classList.remove('active');
+    document.querySelector('.plot-container').classList.add('active');
+});
+
+// Календарь
+const calendarDays = document.getElementById('calendarDays');
+const monthTitle = document.getElementById('monthTitle');
+const prevMonth = document.getElementById('prevMonth');
+const nextMonth = document.getElementById('nextMonth');
+
+let currentDate = new Date();
+
+function renderCalendar() {
+    const month = currentDate.getMonth();
+    const year = currentDate.getFullYear();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+    
+    // Очищаем старые дни
+    calendarDays.innerHTML = '';
+    
+    // Название месяца
+    monthTitle.textContent = `${currentDate.toLocaleString('ru-RU', { month: 'long' })} ${year}`;
+    
+    // Печатаем дни месяца
+    for (let i = 0; i < firstDayOfMonth; i++) {
+        calendarDays.innerHTML += `<button class="disabled"></button>`;
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dateButton = document.createElement('button');
+        dateButton.textContent = day;
+        dateButton.addEventListener('click', () => {
+            showTimeSelection(day);
+        });
+        calendarDays.appendChild(dateButton);
+    }
+}
+
+function showTimeSelection(day) {
+    document.querySelector('.calendar-container').classList.remove('active');
+    document.querySelector('.time-container').classList.add('active');
+    document.querySelector('.time-container').setAttribute('data-date', day);
+}
+
+prevMonth.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+});
+
+nextMonth.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+});
+
+renderCalendar();
+</script>
+
+</body>
+</html>

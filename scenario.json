@@ -1,0 +1,25 @@
+{
+  "scenarios": [
+    {
+      "name": "Сюжет 1",
+      "description": "Захватывающая игра с элементами магии и приключений.",
+      "difficulty": "Средний",
+      "participants": "2-4 человека",
+      "page": "/scenario1.html"
+    },
+    {
+      "name": "Сюжет 2",
+      "description": "Эксплорация космоса и борьба с инопланетными захватчиками.",
+      "difficulty": "Высокий",
+      "participants": "4-6 человек",
+      "page": "/scenario2.html"
+    },
+    {
+      "name": "Сюжет 3",
+      "description": "Древние цивилизации и потерянные артефакты.",
+      "difficulty": "Низкий",
+      "participants": "1-3 человека",
+      "page": "/scenario3.html"
+    }
+  ]
+}
