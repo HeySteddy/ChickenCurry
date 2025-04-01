@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35818.85 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Telegramminiapp", "Telegramminiapp\Telegramminiapp.pyproj", "{76F8F73E-B499-4948-A4C8-71517D77B4D0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76F8F73E-B499-4948-A4C8-71517D77B4D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76F8F73E-B499-4948-A4C8-71517D77B4D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8769E3E7-B828-4318-99F8-16093A1ACBB5}
+	EndGlobalSection
+EndGlobal
