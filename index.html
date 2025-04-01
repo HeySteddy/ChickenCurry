@@ -7,7 +7,6 @@
     <script src="https://telegram.org/js/web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Reset styles */
         * {
             margin: 0;
             padding: 0;
@@ -21,7 +20,6 @@
             position: relative;
         }
         
-        /* Background image with blur */
         body::before {
             content: "";
             position: fixed;
@@ -33,12 +31,8 @@
             filter: blur(10px);
             opacity: 0.5;
             z-index: -1;
-            background-size: cover; /* Ensures the image covers the whole screen */
-            background-position: center center; /* Centers the background image */
-            background-attachment: fixed; /* Keeps the background fixed during scrolling */
         }
         
-        /* Main container */
         .app-container {
             max-width: 100%;
             min-height: 100vh;
@@ -49,7 +43,6 @@
             justify-content: center;
         }
         
-        /* Menu items */
         .menu-container {
             display: flex;
             flex-direction: column;
@@ -93,67 +86,41 @@
             flex-grow: 1;
         }
 
-        /* Media query for mobile screens */
         @media (max-width: 768px) {
             body::before {
-                filter: blur(8px); /* Less blur on mobile */
+                filter: blur(8px);
             }
         }
     </style>
 </head>
 <body>
-    <div class="app-container" id="app-root">
+    <div class="app-container">
         <main class="menu-container">
-            <a href="#" class="menu-item" onclick="navigate('game')">
+            <a href="game.html" class="menu-item">
                 <div class="menu-icon"><i class="fas fa-calendar-plus"></i></div>
                 <div class="menu-text">Записаться на игру</div>
             </a>
             
-            <a href="#" class="menu-item" onclick="navigate('records')">
+            <a href="records.html" class="menu-item">
                 <div class="menu-icon"><i class="fas fa-list-check"></i></div>
                 <div class="menu-text">Мои записи</div>
             </a>
             
-            <a href="#" class="menu-item" onclick="navigate('admin')">
+            <a href="admin.html" class="menu-item">
                 <div class="menu-icon"><i class="fas fa-user-shield"></i></div>
                 <div class="menu-text">Администрация</div>
             </a>
             
-            <a href="#" class="menu-item" id="support-btn">
+            <a href="https://t.me/chickencurryonlinesupp" class="menu-item">
                 <div class="menu-icon"><i class="fas fa-headset"></i></div>
                 <div class="menu-text">Написать в поддержку</div>
             </a>
             
-            <a href="#" class="menu-item" onclick="navigate('promo')">
+            <a href="promo.html" class="menu-item">
                 <div class="menu-icon"><i class="fas fa-tag"></i></div>
                 <div class="menu-text">Использовать промокод</div>
             </a>
         </main>
     </div>
-
-    <script>
-        if (!window.appInitialized) {
-            Telegram.WebApp.ready();
-            Telegram.WebApp.expand();
-            
-            window.navigate = function(page) {
-                Telegram.WebApp.showAlert(`Переход на: ${page}`);
-            };
-            
-            window.appInitialized = true;
-            console.log('App initialized successfully');
-        } else {
-            console.warn('App already initialized!');
-        }
-        
-        document.getElementById('support-btn').addEventListener('click', function() {
-            if (Telegram.WebApp.initDataUnsafe) {
-                Telegram.WebApp.close();  // Закрываем WebApp, если это необходимо
-                window.open('https://t.me/chickencurryonlinesupp', '_blank');  // Открываем ссылку в новой вкладке
-            } else {
-                window.open('https://t.me/chickencurryonlinesupp', '_blank');
-            }
-        });
-    </script>
 </body>
 </html>
