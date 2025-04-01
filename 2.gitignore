@@ -28,4 +28,35 @@ telegram-web-app.js
 
 # Игнорировать автосгенерированные файлы
 dist/
+# Visual Studio files
+.vs/
+
+# Игнорировать системные файлы
+.DS_Store
+Thumbs.db
+
+# Игнорировать node_modules
+node_modules/
+
+# Игнорировать логи и временные файлы
+*.log
+*.tmp
+
+# Игнорировать настройки IDE
+.idea/
+.vscode/
+
+# Игнорировать локальные файлы ngrok
+ngrok.yml
+
+# Игнорировать локальные копии библиотек
+telegram-web-app.js
+
+# Игнорировать пользовательские настройки
+.env
+.env.local
+
+# Игнорировать автосгенерированные файлы
+dist/
+e0b7c8dad2af610a5fbd97f861f156d2827b8513
 build/
