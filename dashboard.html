@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            text-align: center;
+        }
+
+        .dashboard-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            text-decoration: none;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-text {
+            font-size: 16px;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <h2>Доброго времени суток, <span id="username"></span>!</h2>
+    
+    <div class="menu-container">
+        <a href="#" class="menu-item">
+            <div class="menu-icon"><i class="fas fa-gift"></i></div>
+            <div class="menu-text">Сгенерировать промокод</div>
+        </a>
+        
+        <a href="#" class="menu-item">
+            <div class="menu-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="menu-text">Проверить все промокоды</div>
+        </a>
+        
+        <a href="#" class="menu-item">
+            <div class="menu-icon"><i class="fas fa-user-plus"></i></div>
+            <div class="menu-text">Добавить админа</div>
+        </a>
+        
+        <a href="#" class="menu-item">
+            <div class="menu-icon"><i class="fas fa-edit"></i></div>
+            <div class="menu-text">Редактировать запись на игру</div>
+        </a>
+        
+        <a href="#" class="menu-item">
+            <div class="menu-icon"><i class="fas fa-dollar-sign"></i></div>
+            <div class="menu-text">Посмотреть финансовый доход</div>
+        </a>
+    </div>
+</div>
+
+<script>
+    // Здесь мы извлекаем имя пользователя из localStorage или другого источника
+    const username = localStorage.getItem('username'); // Имя пользователя должно быть сохранено после авторизации
+
+    if (username) {
+        document.getElementById('username').textContent = username;
+    } else {
+        document.getElementById('username').textContent = 'Гость';
+    }
+</script>
+
+</body>
+</html>
