@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Модератор</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            flex-direction: column;
+        }
+
+        .dashboard-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            width: 350px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .dashboard-btn {
+            padding: 10px;
+            background: #ff4500;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+
+        .dashboard-btn:hover {
+            background: #ff5733;
+        }
+
+        .dashboard-btn i {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <h2>Добро пожаловать, Модератор</h2>
+
+    <div class="btn-group">
+        <button class="dashboard-btn">
+            <i class="fas fa-file-alt"></i>
+            Мои записи
+        </button>
+        <button class="dashboard-btn">
+            <i class="fas fa-calendar-alt"></i>
+            Мой график
+        </button>
+        <button class="dashboard-btn">
+            <i class="fas fa-dollar-sign"></i>
+            Мой заработок
+        </button>
+    </div>
+</div>
+
+</body>
+</html>

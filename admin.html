@@ -109,9 +109,16 @@
 
             const users = await response.json();
 
-            if (users[login] && users[login] === password) {
-                alert("Успешный вход!");
-                window.location.href = "/dashboard.html"; // Переход на страницу админки
+            if (users[login] && users[login].password === password) {
+                const role = users[login].role;
+
+                if (role === "admin") {
+                    window.location.href = "/dashboard.html"; // Переход на страницу админки
+                } else if (role === "moderator") {
+                    window.location.href = "/moderator.html"; // Переход на страницу модератора
+                } else {
+                    errorMessage.textContent = "Нет доступа!";
+                }
             } else {
                 errorMessage.textContent = "Неверный логин или пароль!";
             }
