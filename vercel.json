@@ -1,19 +1,13 @@
 {
   "version": 2,
-  "builds": [{
-    "src": "index.html",
-    "use": "@vercel/static",
-    "config": { 
-      "maxLambdaSize": "15mb",
-      "includeFiles": "index.html|assets/**"
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
     }
-  }],
-  "routes": [{
-    "src": "/(.*)",
-    "dest": "/index.html",
-    "headers": {
-      "X-Frame-Options": "DENY",
-      "Content-Security-Policy": "frame-ancestors 'none'"
-    }
-  }]
+  ],
+  "routes": [
+    { "src": "/admin", "dest": "/admin.html" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
 }
