@@ -137,15 +137,25 @@
         }
         
         document.getElementById('support-btn').addEventListener('click', function() {
-            // Проверка на существование initDataUnsafe и корректная обработка ссылки
+        try {
+            const supportUsername = 'chickencurryonlinesupp';
+            
             if (Telegram.WebApp.initDataUnsafe) {
-                Telegram.WebApp.close();  // Закрываем WebApp, если это необходимо
-                window.open('https://t.me/chickencurryonlinesupp', '_blank');  // Открываем ссылку в новой вкладке
+                // Для Telegram используем native-метод
+                Telegram.WebApp.openTelegramLink(`tg://resolve?domain=${supportUsername}`);
             } else {
-                // Если WebApp не инициализирован, просто открываем ссылку
-                window.open('https://t.me/chickencurryonlinesupp', '_blank');
+                // Для браузера и других платформ
+                window.location.href = `https://t.me/${supportUsername}`;
             }
-        });
+            
+            // Закрываем WebApp через 500 мс (если нужно)
+            setTimeout(() => Telegram.WebApp.close(), 500);
+            
+        } catch (error) {
+            console.error('Ошибка при переходе в поддержку:', error);
+            Telegram.WebApp.showAlert('Не удалось открыть чат поддержки');
+        }
+    });
     </script>
 </body>
 </html>
