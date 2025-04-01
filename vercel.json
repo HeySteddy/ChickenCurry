@@ -10,7 +10,15 @@
       "use": "@vercel/static"
     },
     {
+      "src": "dashboard.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "assets/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "users.json",
       "use": "@vercel/static"
     }
   ],
@@ -18,6 +26,10 @@
     {
       "src": "/admin.html",
       "dest": "/admin.html"
+    },
+    {
+      "src": "/dashboard.html",
+      "dest": "/dashboard.html"
     },
     {
       "src": "/(.*)",
