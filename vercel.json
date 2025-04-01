@@ -32,6 +32,14 @@
       "dest": "/dashboard.html"
     },
     {
+      "src": "/users.json",
+      "dest": "/users.json"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
